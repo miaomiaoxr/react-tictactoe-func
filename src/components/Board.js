@@ -59,7 +59,7 @@ const Board = (props) => {
 
     return (
         <div>
-            <div className="status">{props.status()}</div>
+            {/* <div className="status">{props.status()}</div> */}
             <div className="board-row">
                 {/* <Square value={squares[0]} onClick={()=>handleClick(0)} /> */}
                 {/* <Square value={squares[1]} onClick={()=>handleClick(1)} /> */}

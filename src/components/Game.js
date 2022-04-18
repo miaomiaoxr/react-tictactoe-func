@@ -9,6 +9,7 @@ const Game = (props) => {
         squares: Array(9).fill(null),
     }]);
     const [xIsNext, setXIsNext] = useState(true);
+    const [stepNumber, setStepNumber] = useState(0);
 
     const xOrO = () => {
         return xIsNext ? 'X' : 'O';
@@ -26,8 +27,8 @@ const Game = (props) => {
             [2, 4, 6]
         ];
 
-        for(let arr of list) {
-            if(squares[arr[0]] && squares[arr[0]] === squares[arr[1]] && squares[arr[0]] === squares[arr[2]]) {
+        for (let arr of list) {
+            if (squares[arr[0]] && squares[arr[0]] === squares[arr[1]] && squares[arr[0]] === squares[arr[2]]) {
                 return squares[arr[0]];
             }
         }
@@ -37,32 +38,51 @@ const Game = (props) => {
     const printStatus = () => {
         const squares = history[history.length - 1].squares.slice();
         const winner = calculateWinner(squares);
-        if(winner) {
-            return  winner + ' won!';
-        } else{
+        if (winner) {
+            return winner + ' won!';
+        } else {
             return status + xOrO();
         }
     }
 
     const handleSquareClick = (i) => {
-        let squares = history[history.length - 1].squares.slice();
+        const historyCopy = history.slice(0, stepNumber + 1);
+        let squares = historyCopy[stepNumber].squares.slice();
+        if(calculateWinner(squares)||squares[i]){
+            return;
+        }
+        
         squares[i] = xOrO();
-        setHistory((prevState) => {
-            return prevState.concat([{
-                squares: squares
-            }]);
-        });
-        setXIsNext((prevState)=> !prevState);
+        setHistory(historyCopy.concat([{
+            squares: squares
+        }]));
+        setStepNumber(prevState => prevState + 1);
+        setXIsNext((prevState) => !prevState);
+    }
+
+    const move = history.map((step, index) => {
+        const desc = index ? 'Go to move #' + index : 'Go to game start';
+
+        return (
+            <li key={index}>
+                <button onClick={() => jumpTo(index)}>{desc}</button>
+            </li>
+        );
+    });
+
+    const jumpTo = (index) => {
+        setStepNumber(index);
+        setXIsNext((index % 2) === 0);
     }
 
     return (
         <div className="game">
             <div className="game-board">
-                <Board status={printStatus} squares={history[history.length - 1].squares} onClick={handleSquareClick} />
+                <Board status={printStatus} squares={history[stepNumber].squares} onClick={handleSquareClick} />
             </div>
             <div className="game-info">
-                <div>{/* status */}</div>
-                <ol>{/* TODO */}</ol>
+                <div>{printStatus()}</div>
+                <ol>{move}</ol>
             </div>
         </div>
     );
