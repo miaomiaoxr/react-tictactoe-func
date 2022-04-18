@@ -1,5 +1,7 @@
 Implement [the tic-tac-toe game in React tutorial](https://reactjs.org/tutorial/tutorial.html) with function components
 
+Before run this project, run `npm install` first
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
